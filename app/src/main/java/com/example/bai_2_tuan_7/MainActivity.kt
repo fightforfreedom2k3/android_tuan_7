@@ -17,9 +17,9 @@ class MainActivity : AppCompatActivity() {
     private var sinhVienList = listOf(
         SinhVien(hoTen = "Pham Minh Hoang", mssv = "20215582"),
         SinhVien(hoTen = "Nguyen Huy Hoang", mssv = "20211012"),
-        SinhVien(hoTen = "Mai The Tuan", mssv = "20211010"),
-        SinhVien(hoTen = "Nguyen Sy Hung Jr", mssv = "20215592"),
-        SinhVien(hoTen = "Mike Xuan Hieu", mssv = "20215576")
+        SinhVien(hoTen = "Nguyen Van A", mssv = "20211010"),
+        SinhVien(hoTen = "Tran Thi B", mssv = "20215592"),
+        SinhVien(hoTen = "Le Minh C", mssv = "20215576")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
