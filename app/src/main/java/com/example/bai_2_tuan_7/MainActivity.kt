@@ -1,68 +1,58 @@
 package com.example.bai_2_tuan_7
 
+import SinhVien
 import android.os.Bundle
-import android.widget.*
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SinhVienAdapter
+    private lateinit var etSearch: EditText
+    private var sinhVienList = listOf(
+        SinhVien(hoTen = "Pham Minh Hoang", mssv = "20215582"),
+        SinhVien(hoTen = "Nguyen Huy Hoang", mssv = "20211012"),
+        SinhVien(hoTen = "Mai The Tuan", mssv = "20211010"),
+        SinhVien(hoTen = "Nguyen Sy Hung Jr", mssv = "20215592"),
+        SinhVien(hoTen = "Mike Xuan Hieu", mssv = "20215576")
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val editTextNumber = findViewById<EditText>(R.id.editTextNumber)
-        val radioEven = findViewById<RadioButton>(R.id.radioEven)
-        val radioOdd = findViewById<RadioButton>(R.id.radioOdd)
-        val radioSquare = findViewById<RadioButton>(R.id.radioSquare)
-        val buttonShow = findViewById<Button>(R.id.buttonShow)
-        val listView = findViewById<ListView>(R.id.listView)
-        val textViewError = findViewById<TextView>(R.id.textViewError)
+        recyclerView = findViewById(R.id.recyclerView)
+        etSearch = findViewById(R.id.etSearch)
 
-        buttonShow.setOnClickListener {
-            val inputText = editTextNumber.text.toString()
-            val n = inputText.toIntOrNull()
+        adapter = SinhVienAdapter(sinhVienList)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-            if (n == null || n < 0) {
-                textViewError.text = "Vui lòng nhập một số nguyên dương hợp lệ"
-                return@setOnClickListener
-            } else {
-                textViewError.text = ""
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString()
+                filterList(query)
             }
 
-            val numbers = when {
-                radioEven.isChecked -> generateEvenNumbers(n)
-                radioOdd.isChecked -> generateOddNumbers(n)
-                radioSquare.isChecked -> generateSquareNumbers(n)
-                else -> emptyList()
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterList(query: String) {
+        val filteredList = if (query.length > 2) {
+            sinhVienList.filter {
+                it.hoTen.contains(query, ignoreCase = true) || it.mssv.contains(query, ignoreCase = true)
             }
-
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, numbers)
-            listView.adapter = adapter
+        } else {
+            sinhVienList
         }
-    }
-
-    private fun generateEvenNumbers(n: Int): List<Int> {
-        val evenNumbers = mutableListOf<Int>()
-        for (i in 0..n step 2) {
-            evenNumbers.add(i)
-        }
-        return evenNumbers
-    }
-
-    private fun generateOddNumbers(n: Int): List<Int> {
-        val oddNumbers = mutableListOf<Int>()
-        for (i in 1..n step 2) {
-            oddNumbers.add(i)
-        }
-        return oddNumbers
-    }
-
-    private fun generateSquareNumbers(n: Int): List<Int> {
-        val squareNumbers = mutableListOf<Int>()
-        var i = 0
-        while (i * i <= n) {
-            squareNumbers.add(i * i)
-            i++
-        }
-        return squareNumbers
+        adapter.updateList(filteredList)
     }
 }
