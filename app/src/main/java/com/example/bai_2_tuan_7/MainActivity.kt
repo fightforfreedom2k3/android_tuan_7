@@ -1,6 +1,5 @@
 package com.example.bai_2_tuan_7
 
-// File: MainActivity.kt
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
